@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>AllBlue - Resultados</title>
+
+<link rel="stylesheet"
+      href="resultados.css">
+
+</head>
+
+<body>
+
+<header class="topo">
+
+<div class="marca">
+
+    <img
+        src="635705.png"
+        class="logo"
+        alt="AllBlue">
+
+    <h1>AllBlue</h1>
+
+</div>
+
+
+<button
+    class="botao-voltar"
+    onclick="window.history.back()">
+
+    ← Alterar busca
+
+</button>
+
+</header>
+
+<main class="conteudo">
+
+<!-- =============================
+     RESUMO
+============================== -->
+
+<section class="resumo">
+
+    <div class="cidade">
+
+        <span>DE</span>
+
+        <strong id="origem">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="seta">
+        →
+    </div>
+
+
+    <div class="cidade">
+
+        <span>PARA</span>
+
+        <strong id="destino">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="datas">
+
+        <div>
+
+            <span>IDA</span>
+
+            <strong id="dataIda">
+                -
+            </strong>
+
+        </div>
+
+
+        <div id="blocoVolta">
+
+            <span>VOLTA</span>
+
+            <strong id="dataVolta">
+                -
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =============================
+     STATUS
+============================== -->
+
+<section
+    id="carregando"
+    class="carregando">
+
+    <div class="loader"></div>
+
+    <h3>
+        Procurando viagens...
+    </h3>
+
+    <p>
+        Estamos consultando os serviços
+        de viagens disponíveis.
+    </p>
+
+</section>
+
+
+
+<!-- =============================
+     ERRO
+============================== -->
+
+<section
+    id="erro"
+    class="mensagem-erro"
+    style="display:none;">
+
+    <h3>
+        Não foi possível buscar as viagens
+    </h3>
+
+    <p id="textoErro">
+        Tente novamente.
+    </p>
+
+
+    <button
+        onclick="buscarViagens()">
+
+        Tentar novamente
+
+    </button>
+
+</section>
+
+
+
+<!-- =============================
+     SEM RESULTADOS
+============================== -->
+
+<section
+    id="semResultados"
+    class="sem-resultados"
+    style="display:none;">
+
+    <h3>
+        Nenhuma viagem encontrada
+    </h3>
+
+    <p>
+        Tente escolher outra data
+        ou outra cidade.
+    </p>
+
+</section>
+
+
+
+<!-- =============================
+     LISTA
+============================== -->
+
+<section
+    id="listaViagens"
+    class="lista-viagens">
+
+</section>
+
+</main>
+
+<script>
+
+
+/* ==================================================
+   LER PARÂMETROS
+================================================== */
+
+const parametros =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const origem =
+    parametros.get(
+        "origem"
+    );
+
+
+const destino =
+    parametros.get(
+        "destino"
+    );
+
+
+const origemId =
+    parametros.get(
+        "origemId"
+    );
+
+
+const destinoId =
+    parametros.get(
+        "destinoId"
+    );
+
+
+const ida =
+    parametros.get(
+        "ida"
+    );
+
+
+const volta =
+    parametros.get(
+        "volta"
+    );
+
+
+
+/* ==================================================
+   MOSTRAR RESUMO
+================================================== */
+
+document.getElementById(
+    "origem"
+).textContent =
+    origem || "-";
+
+
+document.getElementById(
+    "destino"
+).textContent =
+    destino || "-";
+
+
+document.getElementById(
+    "dataIda"
+).textContent =
+    formatarData(
+        ida
+    );
+
+
+if (volta) {
+
+    document.getElementById(
+        "dataVolta"
+    ).textContent =
+        formatarData(
+            volta
+        );
+
+} else {
+
+    document.getElementById(
+        "blocoVolta"
+    ).style.display =
+        "none";
+
+}
+
+
+
+/* ==================================================
+   FORMATAR DATA
+================================================== */
+
+function formatarData(
+    data
+) {
+
+    if (!data) {
+
+        return "-";
+
+    }
+
+
+    const partes =
+        data.split("-");
+
+
+    if (
+        partes.length !== 3
+    ) {
+
+        return data;
+
+    }
+
+
+    return (
+        partes[2] +
+        "/" +
+        partes[1] +
+        "/" +
+        partes[0]
+    );
+
+}
+
+
+
+/* ==================================================
+   BUSCAR VIAGENS
+================================================== */
+
+async function buscarViagens() {
+
+
+    mostrarCarregando();
+
+
+    /*
+       ==============================================
+       API DO ALLBLUE
+       ==============================================
+
+       Este endereço é o lugar onde o seu BACKEND
+       deverá disponibilizar a busca.
+
+       Exemplo:
+
+       GET /api/viagens
+
+       com:
+
+       origemId
+       destinoId
+       ida
+       volta
+
+       ==============================================
+    */
+
+
+    const parametrosAPI =
+        new URLSearchParams();
+
+
+    parametrosAPI.set(
+        "origemId",
+        origemId
+    );
+
+
+    parametrosAPI.set(
+        "destinoId",
+        destinoId
+    );
+
+
+    parametrosAPI.set(
+        "ida",
+        ida
+    );
+
+
+    if (volta) {
+
+        parametrosAPI.set(
+            "volta",
+            volta
+        );
+
+    }
+
+
+    try {
+
+
+        const resposta =
+            await fetch(
+                "/api/viagens?" +
+                parametrosAPI.toString()
+            );
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                "Servidor de viagens não respondeu corretamente."
+            );
+
+        }
+
+
+        const dados =
+            await resposta.json();
+
+
+        /*
+           Esperamos que a API devolva:
+
+           {
+               "viagens": [...]
+           }
+
+        */
+
+
+        if (
+            !dados.viagens ||
+            dados.viagens.length === 0
+        ) {
+
+            mostrarSemResultados();
+
+            return;
+
+        }
+
+
+        mostrarViagens(
+            dados.viagens
+        );
+
+
+    } catch (erro) {
+
+        console.error(
+            erro
+        );
+
+
+        mostrarErro(
+            "A API de viagens ainda não está conectada ao AllBlue."
+        );
+
+    }
+
+}
+
+
+
+/* ==================================================
+   MOSTRAR VIAGENS
+================================================== */
+
+function mostrarViagens(
+    viagens
+) {
+
+
+    document.getElementById(
+        "carregando"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "erro"
+    ).style.display =
+        "none";
+
+
+    const lista =
+        document.getElementById(
+            "listaViagens"
+        );
+
+
+    lista.innerHTML =
+        "";
+
+
+    viagens.forEach(
+        viagem => {
+
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "viagem";
+
+
+            card.innerHTML = `
+
+                <div class="empresa">
+
+                    <span class="onibus">
+                        🚌
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            ${escaparHTML(
+                                viagem.empresa
+                                || "Empresa"
+                            )}
+                        </strong>
+
+                        <span>
+                            ${escaparHTML(
+                                viagem.tipo
+                                || "Ônibus"
+                            )}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="horarios">
+
+                    <div class="horario">
+
+                        <span>Saída</span>
+
+                        <strong>
+                            ${escaparHTML(
+                                viagem.saida
+                                || "--:--"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="duracao">
+
+                        <span>
+                            ${escaparHTML(
+                                viagem.duracao
+                                || ""
+                            )}
+                        </span>
+
+                        <div class="linha"></div>
+
+                    </div>
+
+
+                    <div class="horario">
+
+                        <span>Chegada</span>
+
+                        <strong>
+                            ${escaparHTML(
+                                viagem.chegada
+                                || "--:--"
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="rodape-viagem">
+
+                    <div class="preco">
+
+                        <span>
+                            A partir de
+                        </span>
+
+                        <strong>
+                            ${formatarPreco(
+                                viagem.preco
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <button
+                        onclick='selecionarViagem(
+                            ${JSON.stringify(viagem)}
+                        )'>
+
+                        Selecionar
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            lista.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ==================================================
+   PREÇO
+================================================== */
+
+function formatarPreco(
+    preco
+) {
+
+    if (
+        preco === undefined ||
+        preco === null
+    ) {
+
+        return "Preço indisponível";
+
+    }
+
+
+    const numero =
+        Number(
+            preco
+        );
+
+
+    if (
+        Number.isNaN(numero)
+    ) {
+
+        return "Preço indisponível";
+
+    }
+
+
+    return (
+        "R$ " +
+        numero
+            .toFixed(2)
+            .replace(
+                ".",
+                ","
+            )
+    );
+
+}
+
+
+
+/* ==================================================
+   SELECIONAR VIAGEM
+================================================== */
+
+function selecionarViagem(
+    viagem
+) {
+
+
+    /*
+       Futuramente:
+
+       window.location.href =
+           "assentos.html?...";
+
+    */
+
+
+    console.log(
+        "Viagem selecionada:",
+        viagem
+    );
+
+
+    alert(
+        "Viagem selecionada!\n\n" +
+        "Empresa: " +
+        (viagem.empresa || "-") +
+        "\nSaída: " +
+        (viagem.saida || "-") +
+        "\nPreço: " +
+        formatarPreco(
+            viagem.preco
+        )
+    );
+
+}
+
+
+
+/* ==================================================
+   CARREGANDO
+================================================== */
+
+function mostrarCarregando() {
+
+    document.getElementById(
+        "carregando"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "erro"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "semResultados"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "listaViagens"
+    ).innerHTML =
+        "";
+
+}
+
+
+
+/* ==================================================
+   ERRO
+================================================== */
+
+function mostrarErro(
+    mensagem
+) {
+
+    document.getElementById(
+        "carregando"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "erro"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "textoErro"
+    ).textContent =
+        mensagem;
+
+}
+
+
+
+/* ==================================================
+   SEM RESULTADOS
+================================================== */
+
+function mostrarSemResultados() {
+
+    document.getElementById(
+        "carregando"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "semResultados"
+    ).style.display =
+        "block";
+
+}
+
+
+
+/* ==================================================
+   SEGURANÇA
+================================================== */
+
+function escaparHTML(
+    texto
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        texto;
+
+
+    return div.innerHTML;
+
+}
+
+
+
+/* ==================================================
+   INICIAR BUSCA
+================================================== */
+
+if (
+    origemId &&
+    destinoId &&
+    ida
+) {
+
+    buscarViagens();
+
+} else {
+
+    mostrarErro(
+        "A busca está incompleta. Volte e escolha origem, destino e data."
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>

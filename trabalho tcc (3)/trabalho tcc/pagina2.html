@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>AllBlue - Buscar Passagens</title>
+
+<link rel="stylesheet"
+      href="pagina2.css">
+
+</head>
+
+<body>
+
+<!-- ==============================
+     TOPO
+=============================== -->
+
+<header class="topo">
+
+    <div class="marca">
+
+        <img src="635705.png"
+             class="logo"
+             alt="Logo AllBlue">
+
+        <h1>AllBlue</h1>
+
+    </div>
+
+
+    <div class="usuario">
+
+        <span>Usuário</span>
+
+    </div>
+
+</header>
+
+
+
+<!-- ==============================
+     CONTEÚDO
+=============================== -->
+
+<main class="conteudo">
+
+
+    <h2>Viaje com conforto!</h2>
+
+    <p class="subtitulo">
+        Descubra o Brasil
+    </p>
+
+
+
+    <!-- ==============================
+         FORMULÁRIO
+    =============================== -->
+
+    <section class="busca">
+
+
+        <!-- ORIGEM -->
+
+        <div class="seletor">
+
+            <label>
+                De
+            </label>
+
+
+            <button
+                type="button"
+                class="campo"
+                id="botaoOrigem"
+                onclick="abrirCidades('origem')">
+
+                <span id="origemTexto">
+                    Escolha a cidade
+                </span>
+
+                <span class="seta">
+                    ▾
+                </span>
+
+            </button>
+
+
+            <div
+                id="listaOrigem"
+                class="painel cidades-painel">
+
+
+                <div class="cabecalho-painel">
+
+                    <strong>
+                        Cidade de origem
+                    </strong>
+
+                </div>
+
+
+                <div class="pesquisa">
+
+                    <span>🔍</span>
+
+                    <input
+                        type="text"
+                        id="pesquisaOrigem"
+                        placeholder="Digite o nome da cidade..."
+                        autocomplete="off"
+                        oninput="filtrarCidades('origem')">
+
+                </div>
+
+
+                <div
+                    id="resultadosOrigem"
+                    class="resultados-cidades">
+
+                    <p class="mensagem">
+                        Carregando cidades...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DESTINO -->
+
+        <div class="seletor">
+
+            <label>
+                Para
+            </label>
+
+
+            <button
+                type="button"
+                class="campo"
+                id="botaoDestino"
+                onclick="abrirCidades('destino')">
+
+                <span id="destinoTexto">
+                    Escolha a cidade
+                </span>
+
+                <span class="seta">
+                    ▾
+                </span>
+
+            </button>
+
+
+            <div
+                id="listaDestino"
+                class="painel cidades-painel">
+
+
+                <div class="cabecalho-painel">
+
+                    <strong>
+                        Cidade de destino
+                    </strong>
+
+                </div>
+
+
+                <div class="pesquisa">
+
+                    <span>🔍</span>
+
+                    <input
+                        type="text"
+                        id="pesquisaDestino"
+                        placeholder="Digite o nome da cidade..."
+                        autocomplete="off"
+                        oninput="filtrarCidades('destino')">
+
+                </div>
+
+
+                <div
+                    id="resultadosDestino"
+                    class="resultados-cidades">
+
+                    <p class="mensagem">
+                        Carregando cidades...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DATA DE IDA -->
+
+        <div class="seletor">
+
+            <label>
+                Ida
+            </label>
+
+
+            <button
+                type="button"
+                class="campo"
+                id="botaoIda"
+                onclick="abrirCalendario('ida')">
+
+                <span id="idaTexto">
+                    Escolha a data
+                </span>
+
+                <span class="icone">
+                    📅
+                </span>
+
+            </button>
+
+
+            <div
+                id="calendarioIda"
+                class="painel calendario">
+
+                <div id="conteudoCalendarioIda">
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DATA DE VOLTA -->
+
+        <div class="seletor">
+
+            <label>
+                Volta
+            </label>
+
+
+            <button
+                type="button"
+                class="campo"
+                id="botaoVolta"
+                onclick="abrirCalendario('volta')">
+
+                <span id="voltaTexto">
+                    Escolha a data
+                </span>
+
+                <span class="icone">
+                    📅
+                </span>
+
+            </button>
+
+
+            <div
+                id="calendarioVolta"
+                class="painel calendario">
+
+                <div id="conteudoCalendarioVolta">
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ==============================
+         BOTÃO BUSCAR
+    =============================== -->
+
+    <button
+        type="button"
+        class="botao-buscar"
+        onclick="buscarPassagens()">
+
+        🔎 Buscar passagens
+
+    </button>
+
+
+    <p class="aviso-api">
+
+        Os horários e preços serão consultados
+        através do serviço de viagens conectado
+        ao AllBlue.
+
+    </p>
+
+
+</main>
+
+<script>
+
+
+/* ==================================================
+   CONFIGURAÇÕES
+================================================== */
+
+const hoje = new Date();
+
+const DATA_MINIMA = new Date(
+    hoje.getFullYear(),
+    hoje.getMonth(),
+    hoje.getDate()
+);
+
+
+/*
+   A lista de municípios será carregada
+   do IBGE.
+*/
+
+let cidades = [];
+
+
+/*
+   Datas selecionadas.
+*/
+
+let dataIdaSelecionada = null;
+
+let dataVoltaSelecionada = null;
+
+
+/*
+   Mês que está sendo mostrado no calendário.
+*/
+
+let calendarioAtual = {
+
+ida: new Date(
+    DATA_MINIMA.getFullYear(),
+    DATA_MINIMA.getMonth(),
+    1
+),
+
+volta: new Date(
+    DATA_MINIMA.getFullYear(),
+    DATA_MINIMA.getMonth(),
+    1
+)
+
+};
+
+
+
+/* ==================================================
+   CARREGAR MUNICÍPIOS DO IBGE
+================================================== */
+
+async function carregarCidades() {
+
+    try {
+
+        const resposta = await fetch(
+            "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
+        );
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                "Erro ao consultar IBGE"
+            );
+
+        }
+
+
+        cidades = await resposta.json();
+
+
+        /*
+           Ordena por nome.
+        */
+
+        cidades.sort(
+            (a, b) =>
+                a.nome.localeCompare(
+                    b.nome,
+                    "pt-BR"
+                )
+        );
+
+
+        mostrarCidadesIniciais("origem");
+
+        mostrarCidadesIniciais("destino");
+
+
+    } catch (erro) {
+
+        console.error(erro);
+
+
+        document.getElementById(
+            "resultadosOrigem"
+        ).innerHTML =
+            `<p class="mensagem">
+                Não foi possível carregar as cidades.
+            </p>`;
+
+
+        document.getElementById(
+            "resultadosDestino"
+        ).innerHTML =
+            `<p class="mensagem">
+                Não foi possível carregar as cidades.
+            </p>`;
+
+    }
+
+}
+
+
+
+/* ==================================================
+   NORMALIZAR TEXTO
+================================================== */
+
+function normalizarTexto(texto) {
+
+    return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .trim();
+
+}
+
+
+
+/* ==================================================
+   ABRIR CIDADES
+================================================== */
+
+function abrirCidades(tipo) {
+
+    fecharPaineis();
+
+
+    let painel;
+
+    let campo;
+
+
+    if (tipo === "origem") {
+
+        painel =
+            document.getElementById(
+                "listaOrigem"
+            );
+
+        campo =
+            document.getElementById(
+                "pesquisaOrigem"
+            );
+
+    } else {
+
+        painel =
+            document.getElementById(
+                "listaDestino"
+            );
+
+        campo =
+            document.getElementById(
+                "pesquisaDestino"
+            );
+
+    }
+
+
+    painel.style.display =
+        "block";
+
+
+    campo.value = "";
+
+
+    mostrarCidadesIniciais(
+        tipo
+    );
+
+
+    setTimeout(
+        () => campo.focus(),
+        50
+    );
+
+}
+
+
+
+/* ==================================================
+   MOSTRAR CIDADES INICIAIS
+================================================== */
+
+function mostrarCidadesIniciais(tipo) {
+
+    /*
+       Mostramos algumas cidades inicialmente.
+       Quando o usuário pesquisar, aparecem
+       os resultados correspondentes.
+    */
+
+    const lista =
+        cidades.slice(0, 30);
+
+
+    mostrarResultadosCidades(
+        tipo,
+        lista
+    );
+
+}
+
+
+
+/* ==================================================
+   PESQUISAR CIDADES
+================================================== */
+
+function filtrarCidades(tipo) {
+
+    let campo;
+
+
+    if (tipo === "origem") {
+
+        campo =
+            document.getElementById(
+                "pesquisaOrigem"
+            );
+
+    } else {
+
+        campo =
+            document.getElementById(
+                "pesquisaDestino"
+            );
+
+    }
+
+
+    const pesquisa =
+        normalizarTexto(
+            campo.value
+        );
+
+
+    if (!pesquisa) {
+
+        mostrarCidadesIniciais(
+            tipo
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Primeiro encontramos cidades
+       que começam com o texto.
+    */
+
+    const comeco =
+        cidades.filter(cidade => {
+
+            const nome =
+                normalizarTexto(
+                    cidade.nome
+                );
+
+            return nome.startsWith(
+                pesquisa
+            );
+
+        });
+
+
+    /*
+       Depois encontramos cidades que
+       apenas contêm o texto.
+    */
+
+    const contem =
+        cidades.filter(cidade => {
+
+            const nome =
+                normalizarTexto(
+                    cidade.nome
+                );
+
+            return (
+                !nome.startsWith(pesquisa)
+                &&
+                nome.includes(pesquisa)
+            );
+
+        });
+
+
+    /*
+       Resultados que começam com o termo
+       aparecem primeiro.
+    */
+
+    const resultados =
+        [
+            ...comeco,
+            ...contem
+        ].slice(0, 50);
+
+
+    mostrarResultadosCidades(
+        tipo,
+        resultados
+    );
+
+}
+
+
+
+/* ==================================================
+   MOSTRAR RESULTADOS DAS CIDADES
+================================================== */
+
+function mostrarResultadosCidades(
+    tipo,
+    lista
+) {
+
+    let container;
+
+
+    if (tipo === "origem") {
+
+        container =
+            document.getElementById(
+                "resultadosOrigem"
+            );
+
+    } else {
+
+        container =
+            document.getElementById(
+                "resultadosDestino"
+            );
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    if (lista.length === 0) {
+
+        container.innerHTML =
+            `<p class="mensagem">
+                Nenhuma cidade encontrada.
+            </p>`;
+
+        return;
+
+    }
+
+
+    lista.forEach(
+        cidade => {
+
+
+            const item =
+                document.createElement(
+                    "button"
+                );
+
+
+            item.type = "button";
+
+            item.className =
+                "cidade-item";
+
+
+            /*
+               Descobre o estado.
+            */
+
+            const uf =
+                cidade.microrregiao
+                ?.mesorregiao
+                ?.UF
+                ?.sigla || "";
+
+
+            item.innerHTML = `
+
+                <strong>
+                    ${cidade.nome}
+                </strong>
+
+                <span>
+                    ${uf}
+                </span>
+
+            `;
+
+
+            item.onclick =
+                () => {
+
+                    selecionarCidade(
+                        tipo,
+                        cidade
+                    );
+
+                };
+
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ==================================================
+   SELECIONAR CIDADE
+================================================== */
+
+function selecionarCidade(
+    tipo,
+    cidade
+) {
+
+    const uf =
+        cidade.microrregiao
+        ?.mesorregiao
+        ?.UF
+        ?.sigla || "";
+
+
+    const nomeCompleto =
+        uf
+        ? `${cidade.nome} - ${uf}`
+        : cidade.nome;
+
+
+    if (tipo === "origem") {
+
+        document.getElementById(
+            "origemTexto"
+        ).textContent =
+            nomeCompleto;
+
+
+        document.getElementById(
+            "botaoOrigem"
+        ).dataset.codigoIbge =
+            cidade.id;
+
+
+    } else {
+
+        document.getElementById(
+            "destinoTexto"
+        ).textContent =
+            nomeCompleto;
+
+
+        document.getElementById(
+            "botaoDestino"
+        ).dataset.codigoIbge =
+            cidade.id;
+
+    }
+
+
+    fecharPaineis();
+
+}
+
+
+
+/* ==================================================
+   ABRIR CALENDÁRIO
+================================================== */
+
+function abrirCalendario(tipo) {
+
+    fecharPaineis();
+
+
+    const painel =
+        document.getElementById(
+            tipo === "ida"
+                ? "calendarioIda"
+                : "calendarioVolta"
+        );
+
+
+    painel.style.display =
+        "block";
+
+
+    renderizarCalendario(
+        tipo
+    );
+
+}
+
+
+
+/* ==================================================
+   RENDERIZAR CALENDÁRIO
+================================================== */
+
+function renderizarCalendario(tipo) {
+
+    const container =
+        document.getElementById(
+            tipo === "ida"
+                ? "conteudoCalendarioIda"
+                : "conteudoCalendarioVolta"
+        );
+
+
+    const data =
+        calendarioAtual[tipo];
+
+
+    const ano =
+        data.getFullYear();
+
+
+    const mes =
+        data.getMonth();
+
+
+    const primeiroDia =
+        new Date(
+            ano,
+            mes,
+            1
+        ).getDay();
+
+
+    const quantidadeDias =
+        new Date(
+            ano,
+            mes + 1,
+            0
+        ).getDate();
+
+
+    const meses = [
+
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro"
+
+    ];
+
+
+    let html = `
+
+        <div class="calendario-topo">
+
+            <button
+                type="button"
+                onclick="mudarMes(
+                    '${tipo}',
+                    -1
+                )">
+
+                ‹
+
+            </button>
+
+
+            <strong>
+
+                ${meses[mes]}
+                ${ano}
+
+            </strong>
+
+
+            <button
+                type="button"
+                onclick="mudarMes(
+                    '${tipo}',
+                    1
+                )">
+
+                ›
+
+            </button>
+
+        </div>
+
+
+        <div class="dias-semana">
+
+            <span>Dom</span>
+            <span>Seg</span>
+            <span>Ter</span>
+            <span>Qua</span>
+            <span>Qui</span>
+            <span>Sex</span>
+            <span>Sáb</span>
+
+        </div>
+
+
+        <div class="dias">
+
+    `;
+
+
+    /*
+       Espaços antes do primeiro dia.
+    */
+
+    for (
+        let i = 0;
+        i < primeiroDia;
+        i++
+    ) {
+
+        html +=
+            `<span class="dia vazio"></span>`;
+
+    }
+
+
+    /*
+       Criar cada dia.
+    */
+
+    for (
+        let dia = 1;
+        dia <= quantidadeDias;
+        dia++
+    ) {
+
+        const dataDia =
+            new Date(
+                ano,
+                mes,
+                dia
+            );
+
+
+        const passado =
+            dataDia < DATA_MINIMA;
+
+
+        let selecionado = false;
+
+
+        if (
+            tipo === "ida" &&
+            dataIdaSelecionada &&
+            mesmaData(
+                dataDia,
+                dataIdaSelecionada
+            )
+        ) {
+
+            selecionado = true;
+
+        }
+
+
+        if (
+            tipo === "volta" &&
+            dataVoltaSelecionada &&
+            mesmaData(
+                dataDia,
+                dataVoltaSelecionada
+            )
+        ) {
+
+            selecionado = true;
+
+        }
+
+
+        const classe =
+            selecionado
+                ? "dia selecionado"
+                : passado
+                    ? "dia desativado"
+                    : "dia";
+
+
+        html += `
+
+            <button
+                type="button"
+                class="${classe}"
+                ${
+                    passado
+                    ? "disabled"
+                    : ""
+                }
+                onclick="selecionarDia(
+                    '${tipo}',
+                    ${ano},
+                    ${mes},
+                    ${dia}
+                )">
+
+                ${dia}
+
+            </button>
+
+        `;
+
+    }
+
+
+    html += `
+
+        </div>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+
+/* ==================================================
+   MUDAR MÊS
+================================================== */
+
+function mudarMes(
+    tipo,
+    quantidade
+) {
+
+    const atual =
+        calendarioAtual[tipo];
+
+
+    const novoMes =
+        new Date(
+            atual.getFullYear(),
+            atual.getMonth() + quantidade,
+            1
+        );
+
+
+    /*
+       Não permite voltar antes de setembro de 2026.
+    */
+
+    const limite =
+        new Date(
+            DATA_MINIMA.getFullYear(),
+            DATA_MINIMA.getMonth(),
+            1
+        );
+
+
+    if (novoMes < limite) {
+
+        return;
+
+    }
+
+
+    calendarioAtual[tipo] =
+        novoMes;
+
+
+    renderizarCalendario(
+        tipo
+    );
+
+}
+
+
+
+/* ==================================================
+   SELECIONAR DIA
+================================================== */
+
+function selecionarDia(
+    tipo,
+    ano,
+    mes,
+    dia
+) {
+
+    const selecionada =
+        new Date(
+            ano,
+            mes,
+            dia
+        );
+
+
+    if (
+        selecionada <
+        DATA_MINIMA
+    ) {
+
+        return;
+
+    }
+
+
+    if (tipo === "ida") {
+
+        dataIdaSelecionada =
+            selecionada;
+
+
+        document.getElementById(
+            "idaTexto"
+        ).textContent =
+            formatarData(
+                selecionada
+            );
+
+
+        /*
+           Se a volta estiver antes da ida,
+           apagamos a volta.
+        */
+
+        if (
+            dataVoltaSelecionada &&
+            dataVoltaSelecionada <
+            dataIdaSelecionada
+        ) {
+
+            dataVoltaSelecionada =
+                null;
+
+
+            document.getElementById(
+                "voltaTexto"
+            ).textContent =
+                "Escolha a data";
+
+        }
+
+
+    } else {
+
+        /*
+           A volta não pode ser anterior
+           à ida.
+        */
+
+        if (
+            dataIdaSelecionada &&
+            selecionada <
+            dataIdaSelecionada
+        ) {
+
+            alert(
+                "A data de volta não pode ser anterior à data de ida."
+            );
+
+            return;
+
+        }
+
+
+        dataVoltaSelecionada =
+            selecionada;
+
+
+        document.getElementById(
+            "voltaTexto"
+        ).textContent =
+            formatarData(
+                selecionada
+            );
+
+    }
+
+
+    fecharPaineis();
+
+}
+
+
+
+/* ==================================================
+   COMPARAR DATAS
+================================================== */
+
+function mesmaData(
+    a,
+    b
+) {
+
+    return (
+
+        a.getFullYear() ===
+        b.getFullYear()
+
+        &&
+
+        a.getMonth() ===
+        b.getMonth()
+
+        &&
+
+        a.getDate() ===
+        b.getDate()
+
+    );
+
+}
+
+
+
+/* ==================================================
+   FORMATAR DATA
+================================================== */
+
+function formatarData(
+    data
+) {
+
+    const dia =
+        String(
+            data.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const mes =
+        String(
+            data.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const ano =
+        data.getFullYear();
+
+
+    return (
+        `${dia}/${mes}/${ano}`
+    );
+
+}
+
+
+
+/* ==================================================
+   FECHAR PAINÉIS
+================================================== */
+
+function fecharPaineis() {
+
+    document.querySelectorAll(
+        ".painel"
+    ).forEach(
+        painel => {
+
+            painel.style.display =
+                "none";
+
+        }
+    );
+
+}
+
+
+
+/* ==================================================
+   BUSCAR PASSAGENS
+================================================== */
+
+function buscarPassagens() {
+
+
+    const botaoOrigem =
+        document.getElementById(
+            "botaoOrigem"
+        );
+
+
+    const botaoDestino =
+        document.getElementById(
+            "botaoDestino"
+        );
+
+
+    const origem =
+        document.getElementById(
+            "origemTexto"
+        ).textContent;
+
+
+    const destino =
+        document.getElementById(
+            "destinoTexto"
+        ).textContent;
+
+
+    const codigoOrigem =
+        botaoOrigem.dataset.codigoIbge;
+
+
+    const codigoDestino =
+        botaoDestino.dataset.codigoIbge;
+
+
+
+    /* =========================
+       VALIDAÇÕES
+    ========================= */
+
+
+    if (!codigoOrigem) {
+
+        alert(
+            "Escolha a cidade de origem."
+        );
+
+        return;
+
+    }
+
+
+    if (!codigoDestino) {
+
+        alert(
+            "Escolha a cidade de destino."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        codigoOrigem ===
+        codigoDestino
+    ) {
+
+        alert(
+            "A origem e o destino não podem ser iguais."
+        );
+
+        return;
+
+    }
+
+
+    if (!dataIdaSelecionada) {
+
+        alert(
+            "Escolha a data de ida."
+        );
+
+        return;
+
+    }
+
+
+
+    /* =========================
+       CRIAR PARÂMETROS
+    ========================= */
+
+    const parametros =
+        new URLSearchParams();
+
+
+    parametros.set(
+        "origem",
+        origem
+    );
+
+
+    parametros.set(
+        "destino",
+        destino
+    );
+
+
+    parametros.set(
+        "origemId",
+        codigoOrigem
+    );
+
+
+    parametros.set(
+        "destinoId",
+        codigoDestino
+    );
+
+
+    parametros.set(
+        "ida",
+        converterDataParaISO(
+            dataIdaSelecionada
+        )
+    );
+
+
+    if (dataVoltaSelecionada) {
+
+        parametros.set(
+            "volta",
+            converterDataParaISO(
+                dataVoltaSelecionada
+            )
+        );
+
+    }
+
+
+    /*
+       Abre a página de resultados.
+    */
+
+    window.location.href =
+        "resultados.html?" +
+        parametros.toString();
+
+}
+
+
+
+/* ==================================================
+   DATA PARA ISO
+================================================== */
+
+function converterDataParaISO(
+    data
+) {
+
+    const ano =
+        data.getFullYear();
+
+
+    const mes =
+        String(
+            data.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const dia =
+        String(
+            data.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        `${ano}-${mes}-${dia}`
+    );
+
+}
+
+
+
+/* ==================================================
+   CLICAR FORA
+================================================== */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            !event.target.closest(
+                ".seletor"
+            )
+        ) {
+
+            fecharPaineis();
+
+        }
+
+    }
+);
+
+
+
+/* ==================================================
+   INICIAR
+================================================== */
+
+carregarCidades();
+
+</script>
+
+</body>
+
+</html>

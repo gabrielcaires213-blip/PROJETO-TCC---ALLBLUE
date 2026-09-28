@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AllBlue - Login</title>
+
+<link rel="stylesheet" href="pagina1.css">
+
+</head>
+
+<body>
+
+<!-- CABEÇALHO -->
+<header class="topo">
+
+    <div class="marca">
+        <img src="635705.png" class="logo" alt="Logo AllBlue">
+
+        <h1>AllBlue</h1>
+    </div>
+
+    <div class="contato">
+        Contato: (18) 4002-8922
+    </div>
+
+</header>
+
+
+<!-- ÁREA PRINCIPAL -->
+<main class="principal">
+
+    <div class="login-card">
+
+        <div class="login-titulo">
+
+            <h2>Seja bem-vindo!</h2>
+
+            <p>
+                Entre na sua conta para continuar
+            </p>
+
+        </div>
+
+
+        <!-- E-MAIL -->
+        <div class="campo">
+
+            <label for="email">
+                E-mail
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Digite seu e-mail"
+            >
+
+        </div>
+
+
+        <!-- SENHA -->
+        <div class="campo">
+
+            <label for="senha">
+                Senha
+            </label>
+
+            <input
+                type="password"
+                id="senha"
+                placeholder="Digite sua senha"
+            >
+
+        </div>
+
+
+        <!-- BOTÃO -->
+        <button
+            class="meu-botao"
+            onclick="entrar()"
+        >
+            Entrar
+        </button>
+
+
+        <div class="cadastro">
+            <span>Ainda não possui uma conta?</span>
+            <a href="cadastro.html">Cadastre-se</a>
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- RODAPÉ -->
+<footer>
+
+    <p>
+        © 2026 AllBlue — Viaje pelo Brasil
+    </p>
+
+</footer>
+
+
+<script>
+
+    function entrar() {
+
+        const email =
+            document.getElementById("email").value;
+
+        const senha =
+            document.getElementById("senha").value;
+
+
+        /*
+        Por enquanto não estamos fazendo
+        autenticação real.
+
+        Futuramente podemos conectar
+        isso ao banco de dados.
+        */
+
+        window.location.href = "pagina2.html";
+
+    }
+
+</script>
+
+</body>
+
+</html>

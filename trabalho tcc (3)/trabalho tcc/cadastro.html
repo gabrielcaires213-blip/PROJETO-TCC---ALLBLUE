@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AllBlue - Cadastro</title>
+
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+
+<body>
+
+    <header class="topo">
+
+        <div class="marca">
+            <img src="635705.png" class="logo">
+            <h1>AllBlue</h1>
+        </div>
+
+        <div class="contato">
+            Contato (18) 4002-8922
+        </div>
+
+    </header>
+
+
+    <main class="area-cadastro">
+
+        <div class="card-cadastro">
+
+            <h2>Criar uma conta</h2>
+
+            <p class="subtitulo">
+                Cadastre-se para começar sua viagem
+            </p>
+
+
+            <form id="formCadastro">
+
+                <div class="campo">
+                    <label for="nome">Nome completo</label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        placeholder="Digite seu nome"
+                        required
+                    >
+                </div>
+
+
+                <div class="campo">
+                    <label for="email">E-mail</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Digite seu e-mail"
+                        required
+                    >
+                </div>
+
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        placeholder="Digite sua senha"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+
+                <div class="campo">
+                    <label for="confirmarSenha">Confirmar senha</label>
+
+                    <input
+                        type="password"
+                        id="confirmarSenha"
+                        placeholder="Digite a senha novamente"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+
+                <p id="mensagem" class="mensagem"></p>
+
+
+                <button type="submit" class="botao-cadastrar">
+                    Criar conta
+                </button>
+
+            </form>
+
+
+            <div class="voltar-login">
+
+                <span>Já possui uma conta?</span>
+
+                <a href="pagina1.html">
+                    Entrar
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+        © 2026 AllBlue — Viaje pelo Brasil
+    </footer>
+
+
+    <script>
+
+        const formulario = document.getElementById("formCadastro");
+
+        formulario.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const nome = document.getElementById("nome").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const senha = document.getElementById("senha").value;
+            const confirmarSenha = document.getElementById("confirmarSenha").value;
+
+            const mensagem = document.getElementById("mensagem");
+
+
+            if (senha !== confirmarSenha) {
+
+                mensagem.textContent = "As senhas não são iguais.";
+                mensagem.className = "mensagem erro";
+
+                return;
+            }
+
+
+            mensagem.textContent = "Conta criada com sucesso!";
+            mensagem.className = "mensagem sucesso";
+
+
+            /*
+                Por enquanto o cadastro é apenas visual.
+
+                Futuramente podemos enviar os dados para o backend
+                e salvar o usuário em um banco de dados.
+            */
+
+
+            setTimeout(function() {
+
+                window.location.href = "pagina2.html";
+
+            }, 1500);
+
+        });
+
+    </script>
+
+</body>
+
+</html>

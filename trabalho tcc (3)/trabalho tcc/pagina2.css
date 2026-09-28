@@ -1,0 +1,814 @@
+* {
+  box-sizing: border-box;
+  }
+
+body {
+
+margin: 0;
+
+font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+background:
+    #f4f8ff;
+
+color:
+    #222;
+
+}
+
+/* =====================================
+TOPO
+===================================== */
+
+.topo {
+
+height: 80px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+padding:
+    0 6%;
+
+background:
+    white;
+
+border-bottom:
+    1px solid #e5e5e5;
+
+}
+
+.marca {
+
+display: flex;
+
+align-items: center;
+
+gap: 12px;
+
+}
+
+.logo {
+
+width: 50px;
+
+height: 50px;
+
+object-fit: contain;
+
+}
+
+.marca h1 {
+
+margin: 0;
+
+color:
+    #1677ff;
+
+font-size:
+    30px;
+
+}
+
+.usuario {
+
+font-size:
+    16px;
+
+font-weight:
+    bold;
+
+}
+
+/* =====================================
+CONTEÚDO
+===================================== */
+
+.conteudo {
+
+max-width:
+    1100px;
+
+margin:
+    90px auto;
+
+padding:
+    20px;
+
+text-align:
+    center;
+
+}
+
+.conteudo h2 {
+
+margin:
+    0 0 8px;
+
+font-size:
+    40px;
+
+}
+
+.subtitulo {
+
+margin:
+    0 0 45px;
+
+font-size:
+    20px;
+
+color:
+    #666;
+
+}
+
+/* =====================================
+ÁREA DE BUSCA
+===================================== */
+
+.busca {
+
+display:
+    flex;
+
+justify-content:
+    center;
+
+align-items:
+    flex-start;
+
+gap:
+    12px;
+
+flex-wrap:
+    wrap;
+
+}
+
+.seletor {
+
+position:
+    relative;
+
+text-align:
+    left;
+
+}
+
+.seletor label {
+
+display:
+    block;
+
+margin:
+    0 0 7px 4px;
+
+font-size:
+    14px;
+
+font-weight:
+    bold;
+
+color:
+    #555;
+
+}
+
+/* =====================================
+CAMPO
+===================================== */
+
+.campo {
+
+width:
+    220px;
+
+height:
+    56px;
+
+padding:
+    0 15px;
+
+display:
+    flex;
+
+align-items:
+    center;
+
+justify-content:
+    space-between;
+
+background:
+    white;
+
+border:
+    1px solid #d2d2d2;
+
+border-radius:
+    9px;
+
+cursor:
+    pointer;
+
+font-size:
+    15px;
+
+color:
+    #222;
+
+transition:
+    border-color .2s,
+    box-shadow .2s;
+
+}
+
+.campo:hover {
+
+border-color:
+    #1677ff;
+
+}
+
+.campo:focus {
+
+outline:
+    none;
+
+border-color:
+    #1677ff;
+
+box-shadow:
+    0 0 0 3px
+    rgba(22,119,255,.10);
+
+}
+
+.seta {
+
+color:
+    #777;
+
+}
+
+.icone {
+
+font-size:
+    18px;
+
+}
+
+/* =====================================
+PAINÉIS
+===================================== */
+
+.painel {
+
+display:
+    none;
+
+position:
+    absolute;
+
+top:
+    84px;
+
+left:
+    0;
+
+width:
+    300px;
+
+background:
+    white;
+
+border-radius:
+    12px;
+
+box-shadow:
+    0 10px 30px
+    rgba(0,0,0,.18);
+
+z-index:
+    1000;
+
+overflow:
+    hidden;
+
+}
+
+/* =====================================
+CABEÇALHO
+===================================== */
+
+.cabecalho-painel {
+
+padding:
+    15px;
+
+border-bottom:
+    1px solid #eee;
+
+font-size:
+    15px;
+
+}
+
+/* =====================================
+PESQUISA
+===================================== */
+
+.pesquisa {
+
+display:
+    flex;
+
+align-items:
+    center;
+
+gap:
+    8px;
+
+margin:
+    10px;
+
+padding:
+    0 10px;
+
+height:
+    44px;
+
+border:
+    1px solid #d5d5d5;
+
+border-radius:
+    8px;
+
+}
+
+.pesquisa:focus-within {
+
+border-color:
+    #1677ff;
+
+}
+
+.pesquisa input {
+
+width:
+    100%;
+
+height:
+    100%;
+
+border:
+    none;
+
+outline:
+    none;
+
+font-size:
+    14px;
+
+}
+
+/* =====================================
+RESULTADOS
+===================================== */
+
+.resultados-cidades {
+
+max-height:
+    300px;
+
+overflow-y:
+    auto;
+
+}
+
+.mensagem {
+
+padding:
+    20px;
+
+margin:
+    0;
+
+text-align:
+    center;
+
+color:
+    #777;
+
+font-size:
+    14px;
+
+}
+
+/* =====================================
+CIDADE
+===================================== */
+
+.cidade-item {
+
+width:
+    100%;
+
+padding:
+    12px 15px;
+
+display:
+    flex;
+
+align-items:
+    center;
+
+justify-content:
+    space-between;
+
+border:
+    none;
+
+border-top:
+    1px solid #eee;
+
+background:
+    white;
+
+cursor:
+    pointer;
+
+text-align:
+    left;
+
+}
+
+.cidade-item:hover {
+
+background:
+    #f0f6ff;
+
+}
+
+.cidade-item strong {
+
+font-size:
+    14px;
+
+font-weight:
+    normal;
+
+}
+
+.cidade-item span {
+
+font-size:
+    12px;
+
+font-weight:
+    bold;
+
+color:
+    #1677ff;
+
+}
+
+/* =====================================
+CALENDÁRIO
+===================================== */
+
+.calendario {
+
+width:
+    300px;
+
+padding:
+    15px;
+
+}
+
+.calendario-topo {
+
+display:
+    flex;
+
+align-items:
+    center;
+
+justify-content:
+    space-between;
+
+margin-bottom:
+    15px;
+
+}
+
+.calendario-topo strong {
+
+font-size:
+    16px;
+
+}
+
+.calendario-topo button {
+
+width:
+    34px;
+
+height:
+    34px;
+
+border:
+    none;
+
+border-radius:
+    7px;
+
+background:
+    #f1f4f8;
+
+cursor:
+    pointer;
+
+font-size:
+    22px;
+
+}
+
+.calendario-topo button:hover {
+
+background:
+    #e5efff;
+
+}
+
+/* =====================================
+DIAS DA SEMANA
+===================================== */
+
+.dias-semana {
+
+display:
+    grid;
+
+grid-template-columns:
+    repeat(7, 1fr);
+
+gap:
+    4px;
+
+margin-bottom:
+    5px;
+
+}
+
+.dias-semana span {
+
+text-align:
+    center;
+
+font-size:
+    11px;
+
+color:
+    #777;
+
+}
+
+/* =====================================
+DIAS
+===================================== */
+
+.dias {
+
+display:
+    grid;
+
+grid-template-columns:
+    repeat(7, 1fr);
+
+gap:
+    4px;
+
+}
+
+.dia {
+
+height:
+    35px;
+
+border:
+    none;
+
+border-radius:
+    7px;
+
+background:
+    white;
+
+cursor:
+    pointer;
+
+font-size:
+    13px;
+
+}
+
+.dia:hover {
+
+background:
+    #eaf3ff;
+
+color:
+    #1677ff;
+
+}
+
+.dia.selecionado {
+
+background:
+    #1677ff;
+
+color:
+    white;
+
+}
+
+.dia.desativado {
+
+color:
+    #ccc;
+
+cursor:
+    not-allowed;
+
+}
+
+.dia.vazio {
+
+pointer-events:
+    none;
+
+}
+
+/* =====================================
+BOTÃO BUSCAR
+===================================== */
+
+.botao-buscar {
+
+margin-top:
+    35px;
+
+padding:
+    15px 35px;
+
+border:
+    none;
+
+border-radius:
+    9px;
+
+background:
+    #1677ff;
+
+color:
+    white;
+
+font-size:
+    17px;
+
+font-weight:
+    bold;
+
+cursor:
+    pointer;
+
+transition:
+    .2s;
+
+}
+
+.botao-buscar:hover {
+
+background:
+    #005edb;
+
+transform:
+    translateY(-1px);
+
+}
+
+.botao-buscar:active {
+
+transform:
+    scale(.98);
+
+}
+
+/* =====================================
+AVISO API
+===================================== */
+
+.aviso-api {
+
+margin-top:
+    20px;
+
+color:
+    #888;
+
+font-size:
+    12px;
+
+}
+
+/* =====================================
+RESPONSIVO
+===================================== */
+
+@media (
+max-width: 900px
+) {
+
+.conteudo {
+
+    margin-top:
+        50px;
+
+}
+
+
+.busca {
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+}
+
+
+.seletor {
+
+    width:
+        300px;
+
+}
+
+
+.campo {
+
+    width:
+        300px;
+
+}
+
+
+.painel {
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
+
+}
+
+}
+
+@media (
+max-width: 500px
+) {
+
+.topo {
+
+    padding:
+        0 20px;
+
+}
+
+
+.conteudo h2 {
+
+    font-size:
+        30px;
+
+}
+
+
+.usuario {
+
+    display:
+        none;
+
+}
+
+}
